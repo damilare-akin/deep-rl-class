@@ -1,5 +1,3 @@
-# https://github.com/vwxyzjn/ppo-implementation-details/blob/main/ppo.py
-
 import argparse
 import os
 import random
@@ -18,7 +16,9 @@ from torch.utils.tensorboard import SummaryWriter
 def run_parse():
     # -fmt: off
     parser = argparse.ArgumentParser()
-    parser.add_argument("--exp-name", type=str, default=os.path.basename(__file__).rstrip(".py"),
+    # parser.add_argument("--exp-name", type=str, default=os.path.basename(__file__).rstrip(".py"),
+    #     help="the name of this experiment")
+    parser.add_argument("--exp-name", type=str, default='ppo-cartpole',
         help="the name of this experiment")
     parser.add_argument("--gym-id", type=str, default="CartPole-v1",
         help="the id of the gym environment")
@@ -28,11 +28,11 @@ def run_parse():
         help="seed of the experiment")
     parser.add_argument("--total-timesteps", type=int, default=25000,
         help="total timesteps of the experiments")
-    parser.add_argument("--torch-deterministic", type=lambda x: bool(strtobool(x)), default=True, nargs="?", const=True,
+    parser.add_argument("--torch-deterministic", action='store_true',
         help="if toggled, `torch.backends.cudnn.deterministic=False`")
     parser.add_argument("--cuda", action='store_true',
         help="if toggled, cuda will be enabled by default")
-    parser.add_argument("--track", type=lambda x: bool(strtobool(x)), default=False, nargs="?", const=True,
+    parser.add_argument("--track", action='store_false',
         help="if toggled, this experiment will be tracked with Weights and Biases")
     parser.add_argument("--wandb-project-name", type=str, default="ppo-implementation-details",
         help="the wandb's project name")
@@ -46,9 +46,9 @@ def run_parse():
         help="the number of parallel game environments")
     parser.add_argument("--num-steps", type=int, default=128,
         help="the number of steps to run in each environment per policy rollout")
-    parser.add_argument("--anneal-lr", type=lambda x: bool(strtobool(x)), default=True, nargs="?", const=True,
+    parser.add_argument("--anneal-lr", action='store_true',
         help="Toggle learning rate annealing for policy and value networks")
-    parser.add_argument("--gae", type=lambda x: bool(strtobool(x)), default=True, nargs="?", const=True,
+    parser.add_argument("--gae", action='store_true',
         help="Use GAE for advantage computation")
     parser.add_argument("--gamma", type=float, default=0.99,
         help="the discount factor gamma")
@@ -58,11 +58,11 @@ def run_parse():
         help="the number of mini-batches")
     parser.add_argument("--update-epochs", type=int, default=4,
         help="the K epochs to update the policy")
-    parser.add_argument("--norm-adv", type=lambda x: bool(strtobool(x)), default=True, nargs="?", const=True,
+    parser.add_argument("--norm-adv", action='store_true',
         help="Toggles advantages normalization")
     parser.add_argument("--clip-coef", type=float, default=0.2,
         help="the surrogate clipping coefficient")
-    parser.add_argument("--clip-vloss", type=lambda x: bool(strtobool(x)), default=True, nargs="?", const=True,
+    parser.add_argument("--clip-vloss", action='store_true',
         help="Toggles whether or not to use a clipped loss for the value function, as per the paper.")
     parser.add_argument("--ent-coef", type=float, default=0.01,
         help="coefficient of the entropy")
